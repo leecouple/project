@@ -69,7 +69,7 @@ void closeTab(int level, int height, int weight, char house[30], char status[30]
 	fclose(fp);
 }
 
-char printTitle() {
+void printTitle() {
 	FILE* fp;
 	fp = fopen("title.txt", "r");
 	char buffer[3000] = { 0, };
@@ -93,33 +93,40 @@ int processInput() {
 int processTutorial() {
 	if (kbhit()) {
 		char c = getch();
-		if (c == '\n') {
-			return 10;
+		if (c == ' ') {
+			return 1;
 		}
 	}
 	return 0;
 }
 
-void makeNextTutorial() {
+int makeNextTutorial() {
 	clear();
 	gotoxy(2, 1);
-	printf("감자밭");
+	printf("현재 위치 | 감자밭");
 	int exit;
 
 	gotoxy(2, 4);
-	printf("엔터 눌러서 스토리 보기...\n\n");
+	printf("스페이스 눌러서 스토리 보기...\n\n");
 	char list[1000][1000] = {
+		"기원전 4,000년...\n\n",
 		"병점의 작은 감자밭에서 한 아이가 태어난다.\n\n",
-		"그의 이름은 석찬우...\n\n"
+		"그의 이름은 석찬우...\n\n",
+		"태어날 때부터 감자를 캐야하는 운명이다.\n\n",
+		"과연 감자를 많이 캐 감자의 왕이 될 수 있을까?\n\n"
 	};
 	while (1) {
 		exit = processTutorial();
-		if (exit == 10) {
-			count++;
-			for (int j = 0; j < sizeof(list[count]) / sizeof(char); j++) {
-				printf("%s", list[count][j]);
+		if (exit == 1) {
+			if (count == 6) {
+				Sleep(500);
+				ingameStart();
 			}
+			gotoxy(2, 4 + ((count + 2) * 2));
+			for (int j = 0; j < sizeof(list[count]) / sizeof(char); j++) {
+				printf("%c", list[count][j]);
+			}
+			count++;
 		}
 	}
-
 }
