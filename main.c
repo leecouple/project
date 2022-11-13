@@ -8,6 +8,13 @@ struct SeokChanwoo {
 	char status[30];
 }user;
 
+struct Status {
+	int year;
+	int month;
+	int day;
+	int weather;
+}today;
+
 int main() {
 	int exit;
 	gotoxy(0, 18);
@@ -24,5 +31,7 @@ int main() {
 			break;
 		}
 	}
+	ingameStart();
 	closeTab(user.level, user.height, user.weight, user.house, user.status);
+	return 0;
 }
