@@ -118,8 +118,8 @@ int makeNextTutorial() {
 	while (1) {
 		exit = processTutorial();
 		if (exit == 1) {
-			if (count == 6) {
-				Sleep(500);
+			if (count == 5) {
+				Sleep(100);
 				ingameStart();
 			}
 			gotoxy(2, 4 + ((count + 2) * 2));
