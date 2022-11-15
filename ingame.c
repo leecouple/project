@@ -38,29 +38,53 @@ int ingameStart() {
 	gotoxy(2, 1);
 	printf("현재 위치 | 찬우네 집");
 
-	gotoxy(2, 3);
+	gotoxy(2, 4);
 	printf("아래 보이는 게 당신입니다. WASD로 움직여보세요.");
 
 	now_x = 2;
-	now_y = 5;
-	gotoxy(2, 5);
+	now_y = 7;
+	gotoxy(2, 7);
 	
 	while (1) {
 		exit = processMoveKey();
+		gotoxy(2, 30);
 		switch (exit) {
 			case 1:
-				gotoxy(now_x + 1, now_y);
-				now_x += 1;
+				checkWall(1); break;
 			case 2:
-				gotoxy(now_x - 1, now_y);
-				now_x -= 1;
+				checkWall(2); break;
 			case 3:
-				gotoxy(now_x, now_y + 1);
-				now_y += 1;
+				checkWall(3); break;
 			case 4:
-				gotoxy(now_x, now_y - 1);
-				now_y -= 1;
+				checkWall(4); break;
 		}
-		Sleep(50);
+	}
+}
+
+int checkWall(int a) {
+	if ((now_x >= 2 && now_x < 100) && (now_y >= 7 && now_y < 30)) {
+		clear();
+		gotoxy(2, 1);
+		printf("현재 위치 | 찬우네 집");
+
+		gotoxy(2, 4);
+		printf("아래 보이는 게 당신입니다. WASD로 움직여보세요.");
+
+		switch (a) {
+			case 1:
+				now_x += 1; break;
+			case 2:
+				now_x -= 1; break;
+			case 3:
+				now_y -= 1; break;
+			case 4:
+				now_y += 1; break;
+		}
+		gotoxy(now_x, now_y);
+		printf("◎");
+		return 1;
+	}
+	else {
+		return 0;
 	}
 }
