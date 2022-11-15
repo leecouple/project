@@ -28,3 +28,5 @@ int processTutorial();
 
 int makeNextTutorial();
 int ingameStart();
+
+int checkWall(int a);
