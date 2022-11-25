@@ -9,11 +9,31 @@
 #include <math.h>
 #include <string.h>
 
+enum ColorType {
+	BLACK,  	//0
+	darkBLUE,	//1
+	Dark_Green,	//2
+	darkSkyBlue, //3
+	DarkRed,  	//4
+	DarkPurple,	//5
+	DarkYellow,	//6
+	GRAY,		//7
+	DarkGray,	//8
+	BLUE,		//9
+	GREEN,		//10
+	SkyBlue,	//11
+	RED,		//12
+	PURPLE,		//13
+	YELLOW,		//14
+	WHITE		//15
+} COLOR;
+
 void setWindowSize(int cols, int lows);
 void gotoxy(int x, int y);
 void clear();
 
 void textColor(int colorCode);
+void hideCS();
 
 int getColorBit(int background, int bright, int red, int green, int blue);
 
@@ -27,13 +47,15 @@ int makeNextTutorial();
 int ingameStart();
 
 int checkWall(int a);
+void writeGj();
+int chapter1();
 
 extern int COLS;
 extern int LOWS;
-
 extern int COLS = 50;
 extern int LOWS = 20;
 
+int first_gj= 0;
 int count = 0;
 
 void setWindowSize(int cols, int lows) {
@@ -78,6 +100,13 @@ void textColor(int colorCode) {
 	);
 }
 
+void hideCS() {
+	CONSOLE_CURSOR_INFO cursorInfo = { 0, };
+	cursorInfo.bVisible = 0;
+	cursorInfo.dwSize = 1;
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+}
+
 int getColorBit(int background, int bright, int red, int green, int blue) {
 	return (
 		bright << 3 |
@@ -104,14 +133,14 @@ void printTitle() {
 	printf(".----------------.  .----------------.  .----------------.  .----------------.  .----------------.\n");
 	printf("| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n");
 	printf("| |    ______    | || |      __      | || | ____    ____ | || |     _____    | || |      __      | |\n");
-	printf("| |  .' ___  |   | || |     /  \     | || ||_   \  /   _|| || |    |_   _|   | || |     /  \     | |\n");
-	printf("| | / .'   \_|   | || |    / /\ \    | || |  |   \/   |  | || |      | |     | || |    / /\ \    | |\n");
-	printf("| | | |    ____  | || |   / ____ \   | || |  | |\  /| |  | || |   _  | |     | || |   / ____ \   | |\n");
-	printf("| | \ `.___]  _| | || | _/ /    \ \_ | || | _| |_\/_| |_ | || |  | |_' |     | || | _/ /    \ \_ | |\n");
+	printf("| |  .' ___  |   | || |     /  \\     | || ||_   \\  /   _|| || |    |_   _|   | || |     /  \\     | |\n");
+	printf("| | / .'   \\_|   | || |    / /\\ \\    | || |  |   \\/   |  | || |      | |     | || |    / /\\ \\    | |\n");
+	printf("| | | |    ____  | || |   / ____ \\   | || |  | |\\  /| |  | || |   _  | |     | || |   / ____ \\   | |\n");
+	printf("| | \\ `.___]  _| | || | _/ /    \\ \\_ | || | _| |_\\/_| |_ | || |  | |_' |     | || | _/ /    \\ \\_ | |\n");
 	printf("| |  `._____.'   | || ||____|  |____|| || ||_____||_____|| || |  `.___.'     | || ||____|  |____|| |\n");
 	printf("| |              | || |              | || |              | || |              | || |              | |\n");
 	printf("| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |\n");
-	printf(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n");
+	printf(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------'\n");
 }
 
 int processInput() {
@@ -196,7 +225,21 @@ int isWall() {
 	// 좌표값으로 벽인지 판단하기
 }
 
+char textInfo[100][100] = {
+	"아래 보이는 게 당신입니다. WASD로 움직여서 감자를 먹어보세요. (0/4)",
+	"다음 감자를 먹어보세요. (1/4)",
+	"다음 감자를 먹어보세요. (2/4)",
+	"다음 감자를 먹어보세요. (3/4)"
+};
+
+int chapter1() {
+
+}
+
 int ingameStart() {
+	if (first_gj == 4) {
+		chapter1();
+	}
 	int exit;
 
 	clear();
@@ -204,14 +247,47 @@ int ingameStart() {
 	printf("현재 위치 | 찬우네 집");
 
 	gotoxy(2, 4);
-	printf("아래 보이는 게 당신입니다. WASD로 움직여보세요.");
+	for (int i = 0; i < 100; i++) {
+		printf("%c", textInfo[first_gj][i]);
+	}
+
+	writeGj();
 
 	now_x = 2;
 	now_y = 7;
 	gotoxy(2, 7);
 
+	hideCS();
+	textColor(GRAY);
+
+	printf("◎");
+
 	while (1) {
 		exit = processMoveKey();
+		if (now_x == 70 && now_y == 20) {
+			if (first_gj == 0) {
+				first_gj += 1;
+				ingameStart();
+			}
+		}
+		else if (now_x == 20 && now_y == 14) {
+			if (first_gj == 1) {
+				first_gj += 1;
+				ingameStart();
+			}
+		}
+		else if (now_x == 80 && now_y == 16) {
+			if (first_gj == 2) {
+				first_gj += 1;
+				ingameStart();
+			}
+		}
+		else if (now_x == 20 && now_y == 26) {
+			if (first_gj == 3) {
+				first_gj += 1;
+				ingameStart();
+			}
+		}
 		gotoxy(2, 30);
 		switch (exit) {
 		case 1:
@@ -226,32 +302,53 @@ int ingameStart() {
 	}
 }
 
+void writeGj() {
+	textColor(YELLOW);
+
+	if (first_gj == 0) {
+		gotoxy(70, 20);
+	}
+	else if (first_gj == 1) {
+		gotoxy(20, 14);
+	}
+	else if (first_gj == 2) {
+		gotoxy(80, 16);
+	}
+	else if (first_gj == 3) {
+		gotoxy(20, 26);
+	}
+	printf("▣");
+}
+
 int checkWall(int a) {
-	if ((now_x >= 2 && now_x < 100) && (now_y >= 7 && now_y < 30)) {
-		clear();
-		gotoxy(2, 1);
-		printf("현재 위치 | 찬우네 집");
+	clear();
+	gotoxy(2, 1);
+	printf("현재 위치 | 찬우네 집");
 
-		gotoxy(2, 4);
-		printf("아래 보이는 게 당신입니다. WASD로 움직여보세요.");
+	gotoxy(2, 4);
+	for (int i = 0; i < 100; i++) {
+		printf("%c", textInfo[first_gj][i]);
+	}
 
-		switch (a) {
+	writeGj();
+
+	hideCS();
+	textColor(GRAY);
+
+	switch (a) {
 		case 1:
-			now_x += 1; break;
+			now_x += 2; break;
 		case 2:
-			now_x -= 1; break;
+			now_x -= 2; break;
 		case 3:
 			now_y -= 1; break;
 		case 4:
 			now_y += 1; break;
-		}
-		gotoxy(now_x, now_y);
-		printf("◎");
-		return 1;
 	}
-	else {
-		return 0;
-	}
+	gotoxy(now_x, now_y);
+	printf("◎");
+
+	return 1;
 }
 
 struct SeokChanwoo {
