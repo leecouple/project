@@ -42,13 +42,18 @@ void closeTab(int level, int height, int weight, char house[30], char status[30]
 void printTitle();
 int processInput();
 int processTutorial();
+int processMovePlace();
 
 int makeNextTutorial();
 int ingameStart();
 
 int checkWall(int a);
 void writeGj();
+
 int chapter1();
+int chapter2();
+int chapter3();
+
 
 extern int COLS;
 extern int LOWS;
@@ -134,7 +139,7 @@ void printTitle() {
 	printf("| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n");
 	printf("| |    ______    | || |      __      | || | ____    ____ | || |     _____    | || |      __      | |\n");
 	printf("| |  .' ___  |   | || |     /  \\     | || ||_   \\  /   _|| || |    |_   _|   | || |     /  \\     | |\n");
-	printf("| | / .'   \\_|   | || |    / /\\ \\    | || |  |   \\/   |  | || |      | |     | || |    / /\\ \\    | |\n");
+	printf("| | / .'   \\_|   | || |    / /\\ \\    | || |  |   6\\/   |  | || |      | |     | || |    / /\\ \\    | |\n");
 	printf("| | | |    ____  | || |   / ____ \\   | || |  | |\\  /| |  | || |   _  | |     | || |   / ____ \\   | |\n");
 	printf("| | \\ `.___]  _| | || | _/ /    \\ \\_ | || | _| |_\\/_| |_ | || |  | |_' |     | || | _/ /    \\ \\_ | |\n");
 	printf("| |  `._____.'   | || ||____|  |____|| || ||_____||_____|| || |  `.___.'     | || ||____|  |____|| |\n");
@@ -233,13 +238,99 @@ char textInfo[100][100] = {
 };
 
 int chapter1() {
+	
+	int exit;
+	now_x = 2;
+	now_y = 7;
+	gotoxy(now_x, now_y);
 
+	clear();
+	gotoxy(2, 1);
+	printf("현재 위치 | 찬우네 텃밭");
+
+	gotoxy(30, 1);
+	printf("1 - 집으로 들어가기");
+
+	gotoxy(50, 1);
+	printf("2 - 마트에 가기");
+
+	while (1) {
+		exit = processMoveKey();
+		switch (exit) {
+		case 1:
+			now_x += 2; break;
+		case 2:
+			now_x -= 2; break;
+		case 3:
+			now_y -= 1; break;
+		case 4:
+			now_y += 1; break;
+		case 5:
+			break;
+		case 6:
+			break;
+		}
+
+	}
+}
+
+
+int chapter2() {
+	clear();
+	gotoxy(2, 1);
+	printf("현재 위치 | 찬우네 집");
+
+	gotoxy(30, 1);
+	printf("1 - 텃밭으로 나가기");
+
+	gotoxy(50, 1);
+	printf("2 - 마트에 가기");
+}
+
+
+int chapter3() {
+	clear();
+	gotoxy(2, 1);
+	printf("현재 위치 | 편의점 포도씨유");
+
+	gotoxy(30, 1);
+	printf("1 - 집으로 들어가기");
+
+	gotoxy(50, 1);
+	printf("2 - 텃밭으로 나가기");
+}
+
+int processMovePlace() {
+	if (kbhit()) {
+		char c = getch();
+		switch (c) {
+		case 'D':
+			return 1;
+		case 'A':
+			return 2;
+		case 'W':
+			return 3;
+		case 'S':
+			return 4;
+		case 'd':
+			return 1;
+		case 'a':
+			return 2;
+		case 'w':
+			return 3;
+		case 's':
+			return 4;
+		case '1':
+			return 5;
+		case '2':
+			return 6;
+		}
+	}
+	return 0;
 }
 
 int ingameStart() {
-	if (first_gj == 4) {
-		chapter1();
-	}
+
 	int exit;
 
 	clear();
@@ -284,8 +375,8 @@ int ingameStart() {
 		}
 		else if (now_x == 20 && now_y == 26) {
 			if (first_gj == 3) {
-				first_gj += 1;
-				ingameStart();
+				chapter1();
+				return 0;
 			}
 		}
 		gotoxy(2, 30);
