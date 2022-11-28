@@ -1,6 +1,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 #pragma warning(disable:4996)
 #pragma warning(disable:6262)
+#pragma warning(disable:4244)
+#pragma warning(disable:4716)
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,8 +55,16 @@ void writeGj();
 
 int chapter1();
 int chapter2();
-int chapter3();
 
+struct seokChanwoo {
+	int level;
+	int height;
+};
+
+struct status {
+	char weather[30];
+	char name[30];
+};
 
 extern int COLS;
 extern int LOWS;
@@ -63,6 +73,12 @@ extern int LOWS = 20;
 
 int first_gj= 0;
 int count = 0;
+
+int gj_x[100] = {0,};
+int gj_y[100] = {0,};
+int gj_len = 0;
+
+gj_amount = 0;
 
 void setWindowSize(int cols, int lows) {
 	char buffer[128];
@@ -238,21 +254,6 @@ char textInfo[100][100] = {
 	"다음 감자를 먹어보세요. (3/4)"
 };
 
-struct SeokChanwoo {
-	int level;
-	int height;
-	int weight;
-	char house[30];
-	char status[30];
-}user;
-
-struct Status {
-	int year;
-	int month;
-	int day;
-	int weather;
-}today;
-
 void writeGj() {
 	textColor(YELLOW);
 
@@ -283,8 +284,11 @@ void writeGj2() {
 		randomY = (rand() % 36) + 6;
 	}
 	gotoxy(randomX, randomY);
+	gj_x[gj_len] = randomX;
+	gj_y[gj_len] = randomY;
+	gj_len += 1;
+
 	printf("▣");
-	gotoxy(now_x, now_y);
 }
 
 
@@ -294,22 +298,44 @@ int chapter1() {
 	now_y = 7;
 	gotoxy(now_x, now_y);
 
+	struct status byeomjeong = { "맑음", "찬우네 텃밭"};
+	struct status seoul = { "흐림", "선린인터넷고등학교"};
+
 	textColor(GRAY);
 	printf("◎");
 
 	gotoxy(2, 1);
-	printf("현재 위치 | 찬우네 텃밭");
+	printf("현재 위치 | %s", byeomjeong.name);
 
 	gotoxy(30, 1);
-	printf("1 - 집으로 들어가기");
+	printf("1 - 서울로 올라가기");
 
-	gotoxy(60, 1);
-	printf("2 - 마트에 가기");
-
-	printf(2, 3);
+	gotoxy(2, 3);
 	printf("감자가 랜덤으로 생성되며 날씨가 좋지 않으면 다른 지역으로 옮겨서 감자를 캐야 합니다.");
 
+	gotoxy(3, 3);
+	printf("현재 지역 날씨: %s", byeomjeong.weather);
+
 	while (1) {
+		srand(time(NULL));
+		int a;
+		int repeat = 1500;
+
+		if (byeomjeong.weather == "맑음") {
+			repeat = 1000;
+		}
+		else {
+			repeat = 20000;
+		}
+
+		for (int i = 0; i < 10; i++) {
+			a = (rand() % repeat) + 1;
+		}
+
+		if (a == 915) {
+			writeGj2();
+		}
+
 		exit = processMovePlace();
 		switch (exit) {
 		case 1:
@@ -336,10 +362,13 @@ int removeKey(int a, char b) {
 	printf("현재 위치 | 찬우네 텃밭");
 
 	gotoxy(30, 1);
-	printf("1 - 집으로 들어가기");
+	printf("1 - 서울로 올라가기");
 
-	gotoxy(60, 1);
-	printf("2 - 마트에 가기");
+	gotoxy(2, 3);
+	printf("감자가 랜덤으로 생성되며 날씨가 좋지 않으면 다른 지역으로 옮겨서 감자를 캐야 합니다.");
+
+	gotoxy(3, 3);
+	printf("현재 지역 날씨: 맑음");
 
 	if (b == 'x') {
 		now_x += a;
@@ -351,14 +380,9 @@ int removeKey(int a, char b) {
 	gotoxy(now_x, now_y);
 	textColor(GRAY);
 	printf("◎");
-	writeGj2();
 }
 
 int chapter2() {
-
-}
-
-int chapter3() {
 
 }
 
@@ -489,7 +513,7 @@ int checkWall(int a) {
 int main() {
 	int exit;
 	gotoxy(0, 18);
-	struct SeokChanwoo user = { 1, 180, 50, "병점역", "안녕하세요" };
+
 	setWindowSize(100, 30);
 	printTitle();
 
@@ -503,6 +527,5 @@ int main() {
 		}
 	}
 	ingameStart();
-	closeTab(user.level, user.height, user.weight, user.house, user.status);
 	return 0;
 }
