@@ -8,6 +8,7 @@
 #include <conio.h>
 #include <math.h>
 #include <string.h>
+#include <time.h>
 
 enum ColorType {
 	BLACK,  	//0
@@ -237,67 +238,128 @@ char textInfo[100][100] = {
 	"다음 감자를 먹어보세요. (3/4)"
 };
 
+struct SeokChanwoo {
+	int level;
+	int height;
+	int weight;
+	char house[30];
+	char status[30];
+}user;
+
+struct Status {
+	int year;
+	int month;
+	int day;
+	int weather;
+}today;
+
+void writeGj() {
+	textColor(YELLOW);
+
+	if (first_gj == 0) {
+		gotoxy(70, 20);
+	}
+	else if (first_gj == 1) {
+		gotoxy(20, 14);
+	}
+	else if (first_gj == 2) {
+		gotoxy(80, 16);
+	}
+	else if (first_gj == 3) {
+		gotoxy(20, 26);
+	}
+	printf("▣");
+}
+
+void writeGj2() {
+	textColor(YELLOW);
+	srand(time(NULL));
+
+	int randomX = 0; 
+	int randomY= 0;
+
+	for (int i = 0; i < 10; i++) {
+		randomX = (rand() % 96) + 4;
+		randomY = (rand() % 36) + 6;
+	}
+	gotoxy(randomX, randomY);
+	printf("▣");
+	gotoxy(now_x, now_y);
+}
+
+
 int chapter1() {
-	
 	int exit;
 	now_x = 2;
 	now_y = 7;
 	gotoxy(now_x, now_y);
 
-	clear();
+	textColor(GRAY);
+	printf("◎");
+
 	gotoxy(2, 1);
 	printf("현재 위치 | 찬우네 텃밭");
 
 	gotoxy(30, 1);
 	printf("1 - 집으로 들어가기");
 
-	gotoxy(50, 1);
+	gotoxy(60, 1);
 	printf("2 - 마트에 가기");
 
+	printf(2, 3);
+	printf("감자가 랜덤으로 생성되며 날씨가 좋지 않으면 다른 지역으로 옮겨서 감자를 캐야 합니다.");
+
 	while (1) {
-		exit = processMoveKey();
+		exit = processMovePlace();
 		switch (exit) {
 		case 1:
-			now_x += 2; break;
+			removeKey(2, 'x');  break;
 		case 2:
-			now_x -= 2; break;
+			removeKey(-2, 'x'); break;
 		case 3:
-			now_y -= 1; break;
+			removeKey(-1, 'y'); break;
 		case 4:
-			now_y += 1; break;
+			removeKey(1, 'y'); break;
 		case 5:
-			break;
+			chapter2(); break;
 		case 6:
-			break;
+			chapter3(); break;
 		}
-
 	}
 }
 
-
-int chapter2() {
+int removeKey(int a, char b) {
 	clear();
+	hideCS();
+
 	gotoxy(2, 1);
-	printf("현재 위치 | 찬우네 집");
-
-	gotoxy(30, 1);
-	printf("1 - 텃밭으로 나가기");
-
-	gotoxy(50, 1);
-	printf("2 - 마트에 가기");
-}
-
-
-int chapter3() {
-	clear();
-	gotoxy(2, 1);
-	printf("현재 위치 | 편의점 포도씨유");
+	printf("현재 위치 | 찬우네 텃밭");
 
 	gotoxy(30, 1);
 	printf("1 - 집으로 들어가기");
 
-	gotoxy(50, 1);
-	printf("2 - 텃밭으로 나가기");
+	gotoxy(60, 1);
+	printf("2 - 마트에 가기");
+
+	if (b == 'x') {
+		now_x += a;
+	}
+	else {
+		now_y += a;
+	}
+
+	gotoxy(now_x, now_y);
+	textColor(GRAY);
+	printf("◎");
+	writeGj2();
+}
+
+int chapter2() {
+
+}
+
+int chapter3() {
+
 }
 
 int processMovePlace() {
@@ -393,24 +455,6 @@ int ingameStart() {
 	}
 }
 
-void writeGj() {
-	textColor(YELLOW);
-
-	if (first_gj == 0) {
-		gotoxy(70, 20);
-	}
-	else if (first_gj == 1) {
-		gotoxy(20, 14);
-	}
-	else if (first_gj == 2) {
-		gotoxy(80, 16);
-	}
-	else if (first_gj == 3) {
-		gotoxy(20, 26);
-	}
-	printf("▣");
-}
-
 int checkWall(int a) {
 	clear();
 	gotoxy(2, 1);
@@ -441,21 +485,6 @@ int checkWall(int a) {
 
 	return 1;
 }
-
-struct SeokChanwoo {
-	int level;
-	int height;
-	int weight;
-	char house[30];
-	char status[30];
-}user;
-
-struct Status {
-	int year;
-	int month;
-	int day;
-	int weather;
-}today;
 
 int main() {
 	int exit;
