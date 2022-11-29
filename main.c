@@ -45,7 +45,7 @@ void closeTab(int level, int height, int weight, char house[30], char status[30]
 void printTitle();
 int processInput();
 int processTutorial();
-int processMovePlace();
+int processMovePlace(int a);
 
 int makeNextTutorial();
 int ingameStart();
@@ -74,9 +74,8 @@ extern int LOWS = 20;
 int first_gj = 0;
 int count = 0;
 
-int gj_x[100] = { 0, };
-int gj_y[100] = { 0, };
-int gj_len = 0;
+int gj_x = 0;
+int gj_y = 0;
 
 gj_amount = 0;
 
@@ -193,6 +192,7 @@ int makeNextTutorial() {
 
 	gotoxy(2, 4);
 	printf("스페이스 눌러서 스토리 보기...\n\n");
+
 	char list[1000][1000] = {
 		"기원전 4,000년...\n\n",
 		"병점의 작은 감자밭에서 한 아이가 태어난다.\n\n",
@@ -200,6 +200,7 @@ int makeNextTutorial() {
 		"태어날 때부터 감자를 캐야하는 운명이다.\n\n",
 		"과연 감자를 많이 캐 감자의 왕이 될 수 있을까?\n\n"
 	};
+
 	while (1) {
 		exit = processTutorial();
 		if (exit == 1) {
@@ -279,15 +280,22 @@ void writeGj2() {
 	int randomX = 0;
 	int randomY = 0;
 
-	randomX = (rand() % 96) + 4;
-	randomY = (rand() % 36) + 6;
+	randomX = (rand() % 94) + 4;
+	randomY = (rand() % 27) + 6;
+
+	while (1) {
+		if (randomX % 2 == 0) {
+			break;
+		}
+		else {
+			randomX = (rand() % 96) + 4;
+			continue;
+		}
+	}
 
 	gotoxy(randomX, randomY);
-	gj_x[gj_len] = randomX;
-	gj_y[gj_len] = randomY;
-	gj_len += 1;
-
-	printf(randomX, randomY);
+	gj_x = randomX;
+	gj_y = randomY;
 
 	printf("▣");
 	gotoxy(now_x, now_y);
@@ -297,6 +305,17 @@ struct status byeomjeong = { "맑음", "찬우네 텃밭" };
 struct status seoul = { "흐림", "선린인터넷고등학교" };
 
 int chapter1() {
+	int random = (rand() % 2) + 1;
+
+	if (random == 2) {
+		strcpy(byeomjeong.weather, "흐림");
+	}
+	else {
+		strcpy(byeomjeong.weather, "맑음");
+	}
+
+	gj_x = 0;
+	gj_y = 0;
 	int exit;
 	now_x = 2;
 	now_y = 7;
@@ -314,6 +333,9 @@ int chapter1() {
 	gotoxy(40, 1);
 	printf("1 - 서울로 올라가기");
 
+	gotoxy(70, 1);
+	printf("키: %dcm", user.height);
+
 	gotoxy(2, 3);
 	printf("감자가 랜덤으로 생성되며 날씨가 좋지 않으면 다른 지역으로 옮겨서 감자를 캐야 합니다.");
 
@@ -321,7 +343,7 @@ int chapter1() {
 	printf("현재 지역 날씨: %s", byeomjeong.weather);
 
 	while (1) {
-		exit = processMovePlace();
+		exit = processMovePlace(1);
 		switch (exit) {
 		case 1:
 			removeKey(2, 'x', 2);  break;
@@ -338,6 +360,17 @@ int chapter1() {
 }
 
 int removeKey(int a, char b, int place) {
+	if (now_x == gj_x && now_y == gj_y) {
+		user.level += 1;
+		gj_x = 0;
+		gj_y = 0;
+
+		if (user.level == 2) {
+			user.level -= 1;
+			user.height += 10;
+		}
+	}
+
 	clear();
 	hideCS();
 
@@ -347,11 +380,23 @@ int removeKey(int a, char b, int place) {
 	gotoxy(40, 1);
 	printf("%s", place == 1 ? "1 - 병점으로 내려가기" : "1 - 서울로 올라가기");
 
+	gotoxy(70, 1);
+	printf("키: %dcm", user.height);
+
 	gotoxy(2, 3);
 	printf("감자가 랜덤으로 생성되며 날씨가 좋지 않으면 다른 지역으로 옮겨서 감자를 캐야 합니다.");
 
 	gotoxy(2, 4);
 	printf("현재 지역 날씨: %s", place == 1 ? seoul.weather : byeomjeong.weather);
+	
+	gotoxy(20, 20);
+	printf("%d", user.level);
+
+	if (gj_x != 0 && gj_y != 0) {
+		gotoxy(gj_x, gj_y);
+		textColor(YELLOW);
+		printf("▣");
+	}
 
 	if (b == 'x') {
 		now_x += a;
@@ -366,6 +411,17 @@ int removeKey(int a, char b, int place) {
 }
 
 int chapter2() {
+	int random = (rand() % 2) + 1;
+
+	if (random == 2) {
+		strcpy(seoul.weather, "흐림");
+	}
+	else {
+		strcpy(seoul.weather, "맑음");
+	}
+
+	gj_x = 0;
+	gj_y = 0;
 	int exit;
 	now_x = 2;
 	now_y = 7;
@@ -383,6 +439,9 @@ int chapter2() {
 	gotoxy(40, 1);
 	printf("1 - 병점으로 내려가기");
 
+	gotoxy(70, 1);
+	printf("키: %dcm", user.height);
+
 	gotoxy(2, 3);
 	printf("감자가 랜덤으로 생성되며 날씨가 좋지 않으면 다른 지역으로 옮겨서 감자를 캐야 합니다.");
 
@@ -390,7 +449,7 @@ int chapter2() {
 	printf("현재 지역 날씨: %s", seoul.weather);
 
 	while (1) {
-		exit = processMovePlace();
+		exit = processMovePlace(2);
 		switch (exit) {
 		case 1:
 			removeKey(2, 'x', 1);  break;
@@ -402,29 +461,31 @@ int chapter2() {
 			removeKey(1, 'y', 1); break;
 		case 5:
 			chapter1(); break;
-		}
+		} 
 	}
 }
 
-int processMovePlace() {
+int processMovePlace(int c) {
 	srand(time(NULL));
-	int a;
+	int a = 916;
 	int repeat;
 
-	if (byeomjeong.weather == "맑음") {
-		repeat = 1000;
-	}
-	else {
-		repeat = 2000;
-	}
-
+	repeat = 1000;  
 	a = (rand() % repeat) + 1;
-	gotoxy(50, 50);
-	printf("%d", a);
 
-	if (a < 915) {
-		writeGj2();
+	if (a < 500) {
+		if (c == 1 && byeomjeong.weather == "맑음") {
+			gotoxy(20, 20);
+			printf("%s", byeomjeong.weather);
+			writeGj2();
+		}
+		else if (c == 2 && seoul.weather == "맑음") {
+			gotoxy(20, 20);
+			printf("%s", seoul.weather);
+			writeGj2();
+		}
 	}
+
 	if (kbhit()) {
 		char c = getch();
 		switch (c) {
