@@ -279,16 +279,18 @@ void writeGj2() {
 	int randomX = 0;
 	int randomY = 0;
 
-	for (int i = 0; i < 10; i++) {
-		randomX = (rand() % 96) + 4;
-		randomY = (rand() % 36) + 6;
-	}
+	randomX = (rand() % 96) + 4;
+	randomY = (rand() % 36) + 6;
+
 	gotoxy(randomX, randomY);
 	gj_x[gj_len] = randomX;
 	gj_y[gj_len] = randomY;
 	gj_len += 1;
 
+	printf(randomX, randomY);
+
 	printf("▣");
+	gotoxy(now_x, now_y);
 }
 
 struct status byeomjeong = { "맑음", "찬우네 텃밭" };
@@ -319,25 +321,6 @@ int chapter1() {
 	printf("현재 지역 날씨: %s", byeomjeong.weather);
 
 	while (1) {
-		srand(time(NULL));
-		int a;
-		int repeat = 1500;
-
-		if (byeomjeong.weather == "맑음") {
-			repeat = 1000;
-		}
-		else {
-			repeat = 2000;
-		}
-
-		for (int i = 0; i < 10; i++) {
-			a = (rand() % repeat) + 1;
-		}
-
-		if (a < 915) {
-			writeGj2();
-		}
-
 		exit = processMovePlace();
 		switch (exit) {
 		case 1:
@@ -362,7 +345,7 @@ int removeKey(int a, char b, int place) {
 	printf("현재 위치 | %s", place == 1 ? seoul.name : byeomjeong.name);
 
 	gotoxy(40, 1);
-	printf("%s", place == 1 ? "1 - 서울로 올라가기" : "1: 병점으로 내려가기");
+	printf("%s", place == 1 ? "1 - 병점으로 내려가기" : "1 - 서울로 올라가기");
 
 	gotoxy(2, 3);
 	printf("감자가 랜덤으로 생성되며 날씨가 좋지 않으면 다른 지역으로 옮겨서 감자를 캐야 합니다.");
@@ -407,25 +390,6 @@ int chapter2() {
 	printf("현재 지역 날씨: %s", seoul.weather);
 
 	while (1) {
-		srand(time(NULL));
-		int a;
-		int repeat = 1500;
-
-		if (seoul.weather == "맑음") {
-			repeat = 1000;
-		}
-		else {
-			repeat = 2000;
-		}
-
-		for (int i = 0; i < 10; i++) {
-			a = (rand() % repeat) + 1;
-		}
-
-		if (a < 915) {
-			writeGj2();
-		}
-
 		exit = processMovePlace();
 		switch (exit) {
 		case 1:
@@ -443,6 +407,24 @@ int chapter2() {
 }
 
 int processMovePlace() {
+	srand(time(NULL));
+	int a;
+	int repeat;
+
+	if (byeomjeong.weather == "맑음") {
+		repeat = 1000;
+	}
+	else {
+		repeat = 2000;
+	}
+
+	a = (rand() % repeat) + 1;
+	gotoxy(50, 50);
+	printf("%d", a);
+
+	if (a < 915) {
+		writeGj2();
+	}
 	if (kbhit()) {
 		char c = getch();
 		switch (c) {
@@ -582,6 +564,5 @@ int main() {
 			break;
 		}
 	}
-	ingameStart();
 	return 0;
 }
