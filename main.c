@@ -58,7 +58,7 @@ int writeGj2();
 int chapter1();
 int chapter2();
 
-void writeGj(int a);
+void writeGj();
 
 int nowplace = 1;
 
@@ -262,7 +262,7 @@ char textInfo[100][100] = {
 };
 
 void writeGj() {
-	textColor(BLUE);
+	textColor(YELLOW);
 
 	if (first_gj == 0) {
 		gotoxy(70, 20);
@@ -305,9 +305,9 @@ int writeGj2() {
 	gj_x = randomX;
 	gj_y = randomY;
 
-	textColor(RED);
-	printf("▣");
-	gotoxy(now_x, now_y);
+		textColor(YELLOW);
+		printf("▣");
+		gotoxy(now_x, now_y);
 }
 
 
@@ -348,7 +348,7 @@ int chapter1() {
 	printf("감자가 랜덤으로 생성되며 날씨가 좋지 않으면 다른 지역으로 옮겨서 감자를 캐야 합니다.");
 
 	gotoxy(2, 4);
-	printf("현재 지역 날씨: %s, %d", byeomjeong.weather, nowplace);
+	printf("현재 지역 날씨: %s", byeomjeong.weather);
 
 	while (1) {
 		exit = processMovePlace();
